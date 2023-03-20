@@ -1,13 +1,14 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import logger from 'morgan';
+import cors from 'cors'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
 import db from './src/models'
 import routes from './src/routes/index.routes'
 
-const uri = 'mongodb://127.0.0.1:27017/metruyen';
+const uri = 'mongodb://127.0.0.1:27017/mobile-web';
 
 db.mongoose
   .connect(uri, {
@@ -27,6 +28,15 @@ db.mongoose
 
 const app = express()
 
+app.use(cors());
+app.use('/uploads', express.static('uploads'));
+app.use(bodyParser.json({
+  limit: '5mb'
+}));
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '5mb'
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
@@ -39,13 +49,8 @@ app.use((req, res, next) => {
   next();
 });
 
-
-//set secret
-app.set('Secret', process.env.SECRET);
-
-
 app.get('/', function (req, res) {
-  res.send('Hello darkness my old friendsss..')
+  res.send('Server is running.')
 })
 
 //routes

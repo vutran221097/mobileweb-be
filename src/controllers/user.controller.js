@@ -9,6 +9,7 @@ userController.create = async (req, res) => {
     const user = new User({
         username: req.body.username,
         email: req.body.email,
+        role: req.body.role,
         password: bcrypt.hashSync(req.body.password, 8),
     });
 
